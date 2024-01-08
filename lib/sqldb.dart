@@ -60,6 +60,10 @@ class SqlDb {
     return response;
   }
 
+
+  // shortcuts methods
+
+
   read(String table, Map<String, Object?> values) async {
     Database? myDb = await db;
     List<Map> response = await myDb!.query(table);
