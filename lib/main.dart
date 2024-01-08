@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sqflite_learn/add_notes_screen.dart';
+import 'package:sqflite_learn/edit_notes_screen.dart';
 import 'package:sqflite_learn/sqldb.dart';
 
 void main() {
@@ -68,24 +69,42 @@ class _MyHomePageState extends State<MyHomePage> {
                 itemBuilder: (context, index) {
                   return Card(
                     child: ListTile(
-                      subtitle: Text("${notes[index]["note"]}"),
-                      title: Text("${notes[index]["title"]}"),
-                      trailing: IconButton(
-                          onPressed: () async {
-                            int response = await sqlDb.deleteData(
-                                "DELETE FROM notes WHERE id=${notes[index]["id"]} ");
-                            if (response > 0) {
-                              notes.removeWhere((element) =>
-                                  element["id"] == notes[index]["id"]);
-                              print('deleted ====================$response');
-                              setState(() {});
-                            }
-                          },
-                          icon: Icon(
-                            Icons.delete,
-                            color: Colors.red,
-                          )),
-                    ),
+                        subtitle: Text("${notes[index]["note"]}"),
+                        title: Text("${notes[index]["title"]}"),
+                        trailing: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            IconButton(
+                                onPressed: () async {
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                      builder: (context) => EditNoteScreen(
+                                            title: notes[index]["title"],
+                                            note: notes[index]["note"],
+                                            id: notes[index]["id"],
+                                          )));
+                                },
+                                icon: Icon(
+                                  Icons.edit,
+                                  color: Colors.blue,
+                                )),
+                            IconButton(
+                                onPressed: () async {
+                                  int response = await sqlDb.deleteData(
+                                      "DELETE FROM notes WHERE id=${notes[index]["id"]} ");
+                                  if (response > 0) {
+                                    notes.removeWhere((element) =>
+                                        element["id"] == notes[index]["id"]);
+                                    print(
+                                        'deleted ====================$response');
+                                    setState(() {});
+                                  }
+                                },
+                                icon: Icon(
+                                  Icons.delete,
+                                  color: Colors.red,
+                                )),
+                          ],
+                        )),
                   );
                 }),
           ],

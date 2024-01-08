@@ -21,7 +21,7 @@ class SqlDb {
     return myDb;
   }
 
-  _onUpgrade(Database db, int oldVersion, int newVersion) async{
+  _onUpgrade(Database db, int oldVersion, int newVersion) async {
     print("upgrade ==================================");
     await db.execute("ALTER TABLE notes ADD COLUMN subTitle TEXT");
   }
@@ -57,6 +57,30 @@ class SqlDb {
   updateData(String sql) async {
     Database? myDb = await db;
     int response = await myDb!.rawUpdate(sql);
+    return response;
+  }
+
+  read(String table, Map<String, Object?> values) async {
+    Database? myDb = await db;
+    List<Map> response = await myDb!.query(table);
+    return response;
+  }
+
+  insert(String table, Map<String, Object?> values) async {
+    Database? myDb = await db;
+    int response = await myDb!.insert(table, values);
+    return response;
+  }
+
+  delete(String table, String myWhere) async {
+    Database? myDb = await db;
+    int response = await myDb!.delete(table, where: myWhere);
+    return response;
+  }
+
+  update(String table, Map<String, Object?> values, String myWhere) async {
+    Database? myDb = await db;
+    int response = await myDb!.update(table, values, where: myWhere);
     return response;
   }
 }
