@@ -16,22 +16,22 @@ class SqlDb {
   initDb() async {
     String databasePath = await getDatabasesPath();
     String path = join(databasePath, "moataz.db");
-    Database myDb = await openDatabase(path, onCreate: _onCreate, version: 1,onUpgrade: _onUpgrade);
+    Database myDb = await openDatabase(path,
+        onCreate: _onCreate, version: 1, onUpgrade: _onUpgrade);
     return myDb;
   }
 
-  _onUpgrade(Database db,int oldVersion,int newVersion){
-
-
+  _onUpgrade(Database db, int oldVersion, int newVersion) async{
     print("upgrade ==================================");
-
+    await db.execute("ALTER TABLE notes ADD COLUMN subTitle TEXT");
   }
 
   _onCreate(Database db, int version) async {
     await db.execute('''
-    CREATE TABLE "notes" (
-    "id" INTEGER  NOT NULL PRIMARY KEY AUTOINCREMENT,
-    "note" TEXT NOT NULL
+    CREATE TABLE notes (
+    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    title TEXT NOT NULL,
+    note TEXT NOT NULL)
     ''');
     print("Created notes in database ==================================");
   }
